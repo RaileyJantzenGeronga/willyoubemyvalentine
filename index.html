@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ffcce6, #ff99cc, #ff66b2);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+            transition: background-color 0.5s;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            padding: 30px;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .title {
+            font-size: 4.5rem;
+            color: #ff0066;
+            text-shadow: 3px 3px 0 #ffcccc, 6px 6px 0 rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            font-size: 1.8rem;
+            color: #990033;
+            margin-bottom: 50px;
+            font-style: italic;
+        }
+        
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .valentine-button {
+            border: none;
+            border-radius: 25px;
+            font-size: 2.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 25px 50px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+            min-width: 220px;
+        }
+        
+        .yes-button {
+            background: linear-gradient(to bottom, #ff3399, #ff0066);
+            color: white;
+            border: 5px solid #ffccdd;
+            transform-origin: center;
+            transition: all 0.5s ease;
+            z-index: 2;
+        }
+        
+        .yes-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(255, 0, 102, 0.4);
+        }
+        
+        .no-button {
+            background: linear-gradient(to bottom, #cccccc, #999999);
+            color: #333;
+            border: 5px solid #dddddd;
+        }
+        
+        .no-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .button-text {
+            z-index: 3;
+            position: relative;
+        }
+        
+        .yes-button i, .no-button i {
+            font-size: 2.5rem;
+        }
+        
+        .message {
+            font-size: 1.8rem;
+            color: #660033;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            display: inline-block;
+            border: 3px dashed #ff66b2;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .hearts-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 24px;
+            color: #ff0066;
+            opacity: 0;
+            animation: floatUp 5s linear forwards;
+        }
+        
+        .fullscreen-yes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(to bottom, #ff3399, #ff0066);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            animation: fadeIn 0.5s ease;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .fullscreen-yes h1 {
+            font-size: 5rem;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+            animation: pulse 1s infinite;
+        }
+        
+        .fullscreen-yes p {
+            font-size: 2.5rem;
+            max-width: 800px;
+            margin-bottom: 40px;
+        }
+        
+        .fullscreen-yes button {
+            background: white;
+            color: #ff0066;
+            border: none;
+            padding: 20px 50px;
+            font-size: 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .fullscreen-yes button:hover {
+            transform: scale(1.1);
+            background: #ffccdd;
+        }
+        
+        .counter {
+            font-size: 1.2rem;
+            color: #990033;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .counter span {
+            font-weight: bold;
+            color: #ff0066;
+            font-size: 1.5rem;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            background-color: #ff0066;
+            z-index: 90;
+            animation: confetti 3s linear forwards;
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 3rem;
+            }
+            
+            .subtitle {
+                font-size: 1.4rem;
+            }
+            
+            .valentine-button {
+                font-size: 1.8rem;
+                padding: 20px 30px;
+                min-width: 180px;
+            }
+            
+            .buttons-container {
+                gap: 20px;
+            }
+            
+            .fullscreen-yes h1 {
+                font-size: 3rem;
+            }
+            
+            .fullscreen-yes p {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-container" id="heartsContainer"></div>
+    
+    <div class="container" id="mainContainer">
+        <h1 class="title">Will you be my Valentine?</h1>
+        
+        <div class="buttons-container">
+            <button class="valentine-button yes-button" id="yesButton">
+                <i class="fas fa-heart"></i>
+                <span class="button-text">Yes</span>
+            </button>
+            
+            <button class="valentine-button no-button" id="noButton">
+                <i class="fas fa-times"></i>
+                <span class="button-text">No</span>
+            </button>
+        </div>
+        
+        <p class="subtitle">This could be a mistake!</p>
+        
+        <div class="message" id="message">
+            I knew you'd say yes! You've made me the happiest person ever! ❤️
+        </div>
+        
+        <div class="counter">
+            "No" clicked: <span id="noCount">0</span> times
+        </div>
+    </div>
+    
+    <div class="fullscreen-yes" id="fullscreenYes" style="display: none;">
+        <h1>YOU SAID YES! ❤️</h1>
+        <p>I knew you couldn't resist! Sunday February 15 10am sharp</p>
+        <button id="resetButton">Go Back</button>
+    </div>
+
+    <script>
+        
+        const yesButton = document.getElementById('yesButton');
+        const noButton = document.getElementById('noButton');
+        const message = document.getElementById('message');
+        const fullscreenYes = document.getElementById('fullscreenYes');
+        const mainContainer = document.getElementById('mainContainer');
+        const heartsContainer = document.getElementById('heartsContainer');
+        const noCountElement = document.getElementById('noCount');
+        const resetButton = document.getElementById('resetButton');
+        
+        
+        let yesScale = 1;
+        let noClickCount = 0;
+        let isFullscreen = false;
+        
+      
+        function createHearts() {
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.innerHTML = '❤';
+                    heart.style.left = `${Math.random() * 100}%`;
+                    heart.style.fontSize = `${Math.random() * 30 + 20}px`;
+                    heart.style.animationDuration = `${Math.random() * 3 + 3}s`;
+                    heart.style.animationDelay = `${Math.random() * 2}s`;
+                    heartsContainer.appendChild(heart);
+                    
+                    
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 5000);
+                }, i * 300);
+            }
+        }
+        
+        
+        function createConfetti() {
+            const colors = ['#ff0066', '#ff3399', '#ff66b2', '#ff99cc', '#ffccdd'];
+            
+            for (let i = 0; i < 150; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.style.left = `${Math.random() * 100}vw`;
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = `${Math.random() * 15 + 5}px`;
+                    confetti.style.height = `${Math.random() * 15 + 5}px`;
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.animationDelay = `${Math.random() * 1}s`;
+                    
+                    document.body.appendChild(confetti);
+                    
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 10);
+            }
+        }
+        
+        
+        yesButton.addEventListener('click', function() {
+            if (isFullscreen) return;
+            
+            
+            message.classList.add('show');
+            
+            
+            createConfetti();
+            
+            
+            document.body.style.background = 'linear-gradient(135deg, #ff66b2, #ff0066)';
+            
+            
+            setTimeout(() => {
+                mainContainer.style.display = 'none';
+                fullscreenYes.style.display = 'flex';
+                isFullscreen = true;
+                
+                
+                createHearts();
+            }, 1500);
+        });
+        
+        
+        noButton.addEventListener('click', function() {
+            if (isFullscreen) return;
+            
+            
+            noClickCount++;
+            noCountElement.textContent = noClickCount;
+            
+            
+            yesScale += 0.3;
+            yesButton.style.transform = `scale(${yesScale})`;
+            
+            
+            const maxX = window.innerWidth - noButton.offsetWidth - 50;
+            const maxY = window.innerHeight - noButton.offsetHeight - 50;
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            noButton.style.position = 'absolute';
+            noButton.style.left = `${randomX}px`;
+            noButton.style.top = `${randomY}px`;
+            
+           
+            const noTexts = [
+                "Are you sure?",
+                "Really?",
+                "Think again!",
+                "Mistake!",
+                "Try again!",
+                "You'll regret it!",
+                "Please?",
+                "I'm sad now :(",
+                "One more chance?",
+                "Final chance!"
+            ];
+            
+            const randomText = noTexts[Math.floor(Math.random() * noTexts.length)];
+            noButton.querySelector('.button-text').textContent = randomText;
+            
+            
+            createHearts();
+            
+            
+            if (yesScale > 8) {
+                
+                yesButton.style.position = 'fixed';
+                yesButton.style.top = '0';
+                yesButton.style.left = '0';
+                yesButton.style.width = '100vw';
+                yesButton.style.height = '100vh';
+                yesButton.style.borderRadius = '0';
+                yesButton.style.zIndex = '100';
+                yesButton.style.transform = 'scale(1)';
+                yesButton.style.fontSize = '5rem';
+                
+                noButton.style.display = 'none';
+                document.querySelector('.subtitle').style.display = 'none';
+                document.querySelector('.counter').style.display = 'none';
+                
+                
+                yesButton.querySelector('.button-text').textContent = "YOU HAVE TO SAY YES! ❤️";
+                
+                
+                setTimeout(() => {
+                    yesButton.click();
+                }, 3000);
+            }
+        });
+        
+        
+        resetButton.addEventListener('click', function() {
+            
+            mainContainer.style.display = 'block';
+            fullscreenYes.style.display = 'none';
+            isFullscreen = false;
+            
+            yesScale = 1;
+            yesButton.style.transform = 'scale(1)';
+            yesButton.style.position = 'relative';
+            yesButton.style.width = 'auto';
+            yesButton.style.height = 'auto';
+            yesButton.style.borderRadius = '25px';
+            yesButton.style.zIndex = '2';
+            yesButton.style.fontSize = '2.2rem';
+            yesButton.querySelector('.button-text').textContent = "Yes";
+            
+            noButton.style.display = 'flex';
+            noButton.style.position = 'relative';
+            noButton.style.left = 'auto';
+            noButton.style.top = 'auto';
+            noButton.querySelector('.button-text').textContent = "No";
+            
+            document.querySelector('.subtitle').style.display = 'block';
+            document.querySelector('.counter').style.display = 'inline-block';
+            
+            message.classList.remove('show');
+            
+            document.body.style.background = 'linear-gradient(135deg, #ffcce6, #ff99cc, #ff66b2)';
+            
+            
+            createHearts();
+        });
+        
+        
+        createHearts();
+        setInterval(createHearts, 5000);
+        
+        
+        
+        
+       
+        noButton.addEventListener('mouseenter', function() {
+            if (isFullscreen || yesScale > 8) return;
+            
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.3)';
+        });
+        
+        noButton.addEventListener('mouseleave', function() {
+            if (isFullscreen || yesScale > 8) return;
+            
+            this.style.transform = '';
+            this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.2)';
+        });
+    </script>
+</body>
+</html>
